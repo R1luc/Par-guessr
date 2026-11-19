@@ -1,1 +1,58 @@
-/* You can add global styles to this file, and also import other style files */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  color: #202124;
+  font-family: Arial, sans-serif;
+  line-height: 1.5;
+}
+
+main {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem;
+}
+
+h1,
+h2 {
+  margin: 0 0 1.5rem;
+}
+
+p {
+  margin: 0 0 1.25rem;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+label {
+  margin-top: 0.75rem;
+  font-weight: 600;
+}
+
+input,
+button {
+  min-height: 2.5rem;
+  padding: 0.5rem 0.75rem;
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+  margin-top: 1rem;
+}
+
+small {
+  color: #b42318;
+  margin-bottom: 0.25rem;
+}
+
+a {
+  display: inline-block;
+  margin-top: 1.25rem;
+}

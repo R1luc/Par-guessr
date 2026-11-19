@@ -1,1 +1,27 @@
-<p>cadastro-component works!</p>
+<main>
+  <h1>Cadastro</h1>
+  <form [formGroup]="registerForm" (ngSubmit)="submit()">
+    <label for="nick">Nome de Usuário</label>
+    <input id="nick" type="text" formControlName="nick" autocomplete="nickname" />
+
+    <label for="email">E-mail</label>
+    <input id="email" type="email" formControlName="email" autocomplete="email" />
+
+    <label for="password">Senha</label>
+    <input id="password" type="password" formControlName="password" autocomplete="new-password" />
+
+    <label for="confirm-password">Confirmar senha</label>
+    <input id="confirm-password" type="password" formControlName="confirmPassword" autocomplete="new-password" />
+
+    @if (submitted && registerForm.invalid) {
+      <small>Preencha os campos corretamente. A senha deve ter pelo menos 6 caracteres.</small>
+    }
+    @if (errorMessage) {
+      <small>{{ errorMessage }}</small>
+    }
+
+    <button type="submit">Cadastrar</button>
+  </form>
+
+  <a routerLink="/login">Já tenho uma conta</a>
+</main>

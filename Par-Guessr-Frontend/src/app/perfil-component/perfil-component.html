@@ -1,0 +1,53 @@
+<app-navbar-component />
+<main>
+  <h1>Perfil</h1>
+  @if (auth.user(); as user) {
+    <label class="photo-picker" for="photo" title="Alterar foto de perfil">
+      <img class="profile-photo" [src]="user.photo" alt="Foto de perfil" />
+      <span>Alterar foto</span>
+    </label>
+    <input id="photo" class="visually-hidden" type="file" accept="image/*" (change)="changePhoto($event)" />
+
+    <div class="profile-row">
+      <strong>Nome de Usuário:</strong>
+      @if (editingNick) {
+        <form [formGroup]="profileForm" (ngSubmit)="updateProfile()" class="inline-form">
+          <input id="nick" type="text" formControlName="nick" aria-label="Nome de Usuário" />
+          <button type="submit">Salvar</button>
+          <button type="button" (click)="cancelNickEdit()">Cancelar</button>
+        </form>
+      } @else {
+        <span>{{ user.nick }}</span>
+        <button type="button" (click)="editingNick = true">Alterar</button>
+      }
+    </div>
+
+    <p><strong>E-mail:</strong> {{ user.email }}</p>
+    <div class="profile-row">
+      <strong>Senha:</strong>
+      <span>••••••••</span>
+      <button type="button" (click)="showPasswordForm = !showPasswordForm">
+        {{ showPasswordForm ? 'Cancelar' : 'Mudar senha' }}
+      </button>
+    </div>
+
+    @if (showPasswordForm) {
+      <form [formGroup]="passwordForm" (ngSubmit)="changePassword()">
+        <label for="current-password">Senha atual</label>
+        <input id="current-password" type="password" formControlName="currentPassword" />
+
+        <label for="new-password">Nova senha</label>
+        <input id="new-password" type="password" formControlName="newPassword" />
+
+        <button type="submit">Alterar senha</button>
+      </form>
+    }
+
+    @if (message) {
+      <p class="success">{{ message }}</p>
+    }
+    @if (errorMessage) {
+      <p class="error">{{ errorMessage }}</p>
+    }
+  }
+</main>

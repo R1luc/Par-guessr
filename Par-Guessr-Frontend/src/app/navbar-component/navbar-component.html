@@ -1,1 +1,7 @@
-<p>navbar-component works!</p>
+<nav aria-label="Navegação principal">
+  <a routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Home</a>
+  <a routerLink="/ranking" routerLinkActive="active">Ranking</a>
+  <a routerLink="/jogar" routerLinkActive="active">Jogar</a>
+  <a routerLink="/perfil" routerLinkActive="active">Perfil</a>
+  <button type="button" (click)="logout()">Sair</button>
+</nav>

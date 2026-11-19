@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
+import { NavbarComponent } from '../navbar-component/navbar-component';
 
 @Component({
   selector: 'app-ranking-component',
-  imports: [],
+  imports: [NavbarComponent],
   templateUrl: './ranking-component.html',
   styleUrl: './ranking-component.scss',
 })
