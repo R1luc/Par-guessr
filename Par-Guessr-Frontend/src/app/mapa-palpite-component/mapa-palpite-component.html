@@ -1,1 +1,12 @@
-<p>mapa-palpite-component works!</p>
+<button
+  type="button"
+  class="mapa"
+  (click)="clicar($event)"
+  [disabled]="desabilitado()"
+  aria-label="Planta do campus. Clique para marcar onde você acha que a foto foi tirada."
+>
+  <span class="legenda">Planta do campus (provisória)</span>
+  @if (marcador(); as m) {
+    <span class="marcador" [style.left.%]="m.x * 100" [style.top.%]="m.y * 100"></span>
+  }
+</button>

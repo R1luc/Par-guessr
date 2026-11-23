@@ -1,1 +1,16 @@
-<p>resultado-rodada-component works!</p>
+@if (resultado(); as r) {
+  <section aria-live="polite">
+    <h2>{{ r.nomeLocal }}</h2>
+    <img class="original" [src]="r.imagemOriginalUrl" alt="Foto original de {{ r.nomeLocal }}" />
+
+    <p>Proximidade: {{ r.proximidadePct }}%</p>
+    <p>Pontos pela proximidade: {{ r.pontosBase }}</p>
+    <p>Dicas usadas: {{ r.dicasUsadas }} (×{{ r.multiplicadorDicas }})</p>
+    <p><strong>Pontos da rodada: {{ r.pontos }}</strong></p>
+    <p>Total da partida: {{ r.pontuacaoTotal }}</p>
+
+    <button type="button" (click)="proxima.emit()">
+      {{ r.ultimaRodada ? 'Ver resumo' : 'Próxima rodada' }}
+    </button>
+  </section>
+}

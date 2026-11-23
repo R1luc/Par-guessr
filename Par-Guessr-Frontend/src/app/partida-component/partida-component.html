@@ -1,1 +1,37 @@
-<p>partida-component works!</p>
+<app-navbar-component />
+<main>
+  @if (erro()) {
+    <p role="alert">{{ erro() }}</p>
+    @if (naoEncontrada()) {
+      <a routerLink="/jogar">Iniciar uma nova partida</a>
+    } @else {
+      <button type="button" (click)="carregarRodada()">Tentar de novo</button>
+    }
+  } @else if (rodada(); as r) {
+    <h1>Rodada {{ r.numero }} de {{ r.totalRodadas }}</h1>
+
+    @if (resultado(); as res) {
+      <app-resultado-rodada-component [resultado]="res" (proxima)="proxima()" />
+    } @else {
+      <app-imagem-local-component [imagemUrl]="r.imagemUrl" />
+
+      <app-dicas-component
+        [dicasUsadas]="r.dicasUsadas"
+        [maxDicas]="r.maxDicas"
+        [multiplicadorAtual]="r.multiplicadorAtual"
+        [multiplicadorProximaDica]="r.multiplicadorProximaDica"
+        [desabilitado]="ocupado()"
+        (pedir)="pedirDica()"
+      />
+
+      <h2>Onde fica?</h2>
+      <app-mapa-palpite-component [desabilitado]="ocupado()" (escolher)="palpite.set($event)" />
+
+      <button type="button" (click)="enviarPalpite()" [disabled]="!palpite() || ocupado()">
+        Enviar palpite
+      </button>
+    }
+  } @else {
+    <p>Carregando...</p>
+  }
+</main>

@@ -1,0 +1,27 @@
+.mapa {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  margin: 0;
+  padding: 0;
+  border: 2px dashed #888;
+  border-radius: 8px;
+  background: #f3f3f3;
+  cursor: crosshair;
+}
+
+.legenda {
+  color: #555;
+}
+
+.marcador {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  transform: translate(-50%, -50%);
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: #d92d20;
+  pointer-events: none;
+}

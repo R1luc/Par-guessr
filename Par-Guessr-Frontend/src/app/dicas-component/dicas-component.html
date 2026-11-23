@@ -1,1 +1,15 @@
-<p>dicas-component works!</p>
+<section aria-label="Dicas">
+  <p>Dicas usadas: {{ dicasUsadas() }} de {{ maxDicas() }}</p>
+  <p>Multiplicador de pontos: ×{{ multiplicadorAtual() }}</p>
+  <button
+    type="button"
+    (click)="pedir.emit()"
+    [disabled]="desabilitado() || custoPct() === null"
+  >
+    @if (custoPct() !== null) {
+      Pedir dica (−{{ custoPct() }}% dos pontos)
+    } @else {
+      Sem mais dicas
+    }
+  </button>
+</section>

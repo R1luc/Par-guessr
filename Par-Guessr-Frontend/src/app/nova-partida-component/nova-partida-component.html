@@ -1,5 +1,20 @@
 <app-navbar-component />
 <main>
   <h1>Jogar</h1>
-  <p>As partidas serão disponibilizadas em breve.</p>
+
+  <p>Descubra onde, no campus, a foto foi tirada.</p>
+  <ul>
+    <li>Em cada rodada você vê uma foto pixelada de um local do campus.</li>
+    <li>Marque o local na planta: quanto mais perto, mais pontos.</li>
+    <li>Você pode pedir dicas, que deixam a foto mais nítida, mas cada dica diminui os pontos.</li>
+    <li>No fim, a soma das rodadas entra no ranking.</li>
+  </ul>
+
+  <button type="button" (click)="comecar()" [disabled]="carregando()">
+    {{ carregando() ? 'Iniciando...' : 'Começar' }}
+  </button>
+
+  @if (erro()) {
+    <small role="alert">{{ erro() }}</small>
+  }
 </main>

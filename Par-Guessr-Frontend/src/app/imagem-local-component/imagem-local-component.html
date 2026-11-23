@@ -1,1 +1,6 @@
-<p>imagem-local-component works!</p>
+@if (imagemUrl()) {
+  <img
+    [src]="imagemUrl()"
+    alt="Foto pixelada de um local do campus. Peça dicas para deixá-la mais nítida."
+  />
+}
