@@ -1,5 +1,5 @@
 import { Injectable, signal } from '@angular/core';
-import { Usuario } from '../../models/Usuario';
+import { UsuarioAutenticado } from '../../models/Usuario';
 
 @Injectable({
   providedIn: 'root',
@@ -7,7 +7,7 @@ import { Usuario } from '../../models/Usuario';
 export class Auth {
   private readonly sessionKey = 'par-guessr-user';
   private readonly accountsKey = 'par-guessr-accounts';
-  readonly user = signal<Usuario | null>(this.readSession());
+  readonly user = signal<UsuarioAutenticado | null>(this.readSession());
 
   isAuthenticated(): boolean {
     return this.user() !== null;
@@ -35,7 +35,11 @@ export class Auth {
       return false;
     }
 
-    const user: Usuario = {
+    const nickTrimmed = nick.trim();
+    const user: UsuarioAutenticado = {
+      id: Date.now(),
+      nome: nickTrimmed,
+      fotoUrl: this.defaultPhoto,
       nick: nick.trim(),
       email: normalizedEmail,
       password,
@@ -53,7 +57,14 @@ export class Auth {
       return;
     }
 
-    const updatedUser = { ...currentUser, nick: nick.trim(), photo };
+    const nickTrimmed = nick.trim();
+    const updatedUser: UsuarioAutenticado = {
+      ...currentUser,
+      nome: nickTrimmed,
+      fotoUrl: photo || null,
+      nick: nickTrimmed,
+      photo,
+    };
     this.saveUser(updatedUser);
   }
 
@@ -72,7 +83,7 @@ export class Auth {
     localStorage.removeItem(this.sessionKey);
   }
 
-  private readAccounts(): Usuario[] {
+  private readAccounts(): UsuarioAutenticado[] {
     const accounts = localStorage.getItem(this.accountsKey);
     if (!accounts) {
       return [];
@@ -83,12 +94,19 @@ export class Auth {
       return Array.isArray(parsed)
         ? parsed
             .filter((user) => user?.email && user?.password)
-            .map((user) => ({
-              nick: user.nick ?? user.name ?? user.email,
-              email: this.normalizeEmail(user.email),
-              password: user.password,
-              photo: user.photo ?? this.defaultPhoto,
-            }))
+            .map((user, index) => {
+              const nick = user.nick ?? user.nome ?? user.name ?? user.email;
+              const photo = user.photo ?? user.fotoUrl ?? this.defaultPhoto;
+              return {
+                id: typeof user.id === 'number' ? user.id : index + 1,
+                nome: user.nome ?? nick,
+                fotoUrl: user.fotoUrl ?? photo,
+                nick,
+                email: this.normalizeEmail(user.email),
+                password: user.password,
+                photo,
+              };
+            })
         : [];
     } catch (error) {
       if (error instanceof SyntaxError) {
@@ -98,7 +116,7 @@ export class Auth {
     }
   }
 
-  private readSession(): Usuario | null {
+  private readSession(): UsuarioAutenticado | null {
     const session = localStorage.getItem(this.sessionKey);
     if (!session) {
       return null;
@@ -107,12 +125,19 @@ export class Auth {
     try {
       const parsed = JSON.parse(session);
       return parsed?.email && parsed?.password
-        ? {
-            nick: parsed.nick ?? parsed.name ?? parsed.email,
-            email: this.normalizeEmail(parsed.email),
-            password: parsed.password,
-            photo: parsed.photo ?? this.defaultPhoto,
-          }
+        ? (() => {
+            const nick = parsed.nick ?? parsed.nome ?? parsed.name ?? parsed.email;
+            const photo = parsed.photo ?? parsed.fotoUrl ?? this.defaultPhoto;
+            return {
+              id: typeof parsed.id === 'number' ? parsed.id : 1,
+              nome: parsed.nome ?? nick,
+              fotoUrl: parsed.fotoUrl ?? photo,
+              nick,
+              email: this.normalizeEmail(parsed.email),
+              password: parsed.password,
+              photo,
+            };
+          })()
         : null;
     } catch (error) {
       if (error instanceof SyntaxError) {
@@ -126,7 +151,7 @@ export class Auth {
     return email.trim().toLowerCase();
   }
 
-  private saveUser(user: Usuario): void {
+  private saveUser(user: UsuarioAutenticado): void {
     const accounts = this.readAccounts().map((account) =>
       account.email === user.email ? user : account,
     );

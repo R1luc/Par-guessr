@@ -3,7 +3,7 @@
   <h1>Perfil</h1>
   @if (auth.user(); as user) {
     <label class="photo-picker" for="photo" title="Alterar foto de perfil">
-      <img class="profile-photo" [src]="user.photo" alt="Foto de perfil" />
+      <img class="profile-photo" [src]="user.fotoUrl || user.photo" alt="Foto de perfil" />
       <span>Alterar foto</span>
     </label>
     <input id="photo" class="visually-hidden" type="file" accept="image/*" (change)="changePhoto($event)" />

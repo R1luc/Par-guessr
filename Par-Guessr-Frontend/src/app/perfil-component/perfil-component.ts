@@ -35,7 +35,10 @@ export class PerfilComponent {
       return;
     }
 
-    this.auth.updateProfile(this.profileForm.controls.nick.value, this.auth.user()?.photo ?? '');
+    this.auth.updateProfile(
+      this.profileForm.controls.nick.value,
+      this.auth.user()?.fotoUrl ?? this.auth.user()?.photo ?? '',
+    );
     this.message = 'Perfil atualizado.';
     this.errorMessage = '';
     this.editingNick = false;
