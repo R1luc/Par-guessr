@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 
 import { ResultadoPartidaComponent } from './resultado-partida-component';
 
@@ -8,13 +9,13 @@ describe('ResultadoPartidaComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ResultadoPartidaComponent]
-    })
-    .compileComponents();
-    
+      imports: [ResultadoPartidaComponent],
+      providers: [provideRouter([])],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(ResultadoPartidaComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
+    await fixture.whenStable();
   });
 
   it('should create', () => {

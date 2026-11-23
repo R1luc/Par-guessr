@@ -1,1 +1,48 @@
-<p>resultado-partida-component works!</p>
+<app-navbar-component />
+<main>
+  @if (erro()) {
+    <p role="alert">{{ erro() }}</p>
+    <button type="button" (click)="carregar()">Tentar de novo</button>
+    <a routerLink="/jogar">Iniciar uma nova partida</a>
+  } @else if (resumo(); as r) {
+    <h1>Fim de jogo!</h1>
+
+    <p class="total">Pontuação final: <strong>{{ r.pontuacaoTotal }}</strong></p>
+    @if (r.posicaoRanking !== null) {
+      <p>Você ficou na posição <strong>{{ r.posicaoRanking }}</strong> do ranking.</p>
+    }
+
+    <table>
+      <caption>Resultado por rodada</caption>
+      <thead>
+        <tr>
+          <th scope="col">Rodada</th>
+          <th scope="col">Local</th>
+          <th scope="col">Proximidade</th>
+          <th scope="col">Dicas</th>
+          <th scope="col">Pontos</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (rodada of r.rodadas; track rodada.numero) {
+          <tr>
+            <td>{{ rodada.numero }}</td>
+            <td>{{ rodada.nomeLocal }}</td>
+            <td>{{ rodada.proximidadePct }}%</td>
+            <td>{{ rodada.dicasUsadas }}</td>
+            <td>{{ rodada.pontos }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+
+    <div class="acoes">
+      <button type="button" (click)="jogarNovamente()" [disabled]="iniciando()">
+        {{ iniciando() ? 'Iniciando...' : 'Jogar novamente' }}
+      </button>
+      <a routerLink="/ranking">Ver ranking</a>
+    </div>
+  } @else {
+    <p>Carregando...</p>
+  }
+</main>
