@@ -1,0 +1,34 @@
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+caption {
+  margin-bottom: 0.5rem;
+  text-align: left;
+  font-weight: 600;
+}
+
+th,
+td {
+  padding: 0.5rem 0.25rem;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+}
+
+.jogador {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.foto {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.eu {
+  background: #eef4ff;
+}

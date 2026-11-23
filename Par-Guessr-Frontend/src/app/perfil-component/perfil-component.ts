@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NavbarComponent } from '../navbar-component/navbar-component';
 import { Auth } from '../core/services/auth';
+import { JogoFakeStore } from '../core/services/jogo-fake-store';
 
 @Component({
   selector: 'app-perfil-component',
@@ -11,6 +12,7 @@ import { Auth } from '../core/services/auth';
 })
 export class PerfilComponent {
   readonly auth = inject(Auth);
+  readonly jogo = inject(JogoFakeStore);
   readonly profileForm = new FormGroup({
     nick: new FormControl(this.auth.user()?.nick ?? '', {
       nonNullable: true,

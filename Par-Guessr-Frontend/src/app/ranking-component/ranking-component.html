@@ -1,5 +1,43 @@
 <app-navbar-component />
 <main>
   <h1>Ranking</h1>
-  <p>O ranking será disponibilizado em breve.</p>
+
+  @if (erro()) {
+    <p role="alert">{{ erro() }}</p>
+    <button type="button" (click)="carregar()">Tentar de novo</button>
+  } @else if (itens(); as lista) {
+    @if (lista.length === 0) {
+      <p>Ninguém pontuou ainda. Seja o primeiro!</p>
+    } @else {
+      <table>
+        <caption>Melhor pontuação de cada jogador</caption>
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Jogador</th>
+            <th scope="col">Melhor pontuação</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of lista; track item.usuarioId) {
+            <tr [class.eu]="item.usuarioId === auth.user()?.id">
+              <td>{{ item.posicao }}</td>
+              <td class="jogador">
+                @if (item.fotoUrl) {
+                  <img class="foto" [src]="item.fotoUrl" alt="" />
+                }
+                {{ item.nome }}
+                @if (item.usuarioId === auth.user()?.id) {
+                  <strong>(você)</strong>
+                }
+              </td>
+              <td>{{ item.melhorPontuacao }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  } @else {
+    <p>Carregando...</p>
+  }
 </main>

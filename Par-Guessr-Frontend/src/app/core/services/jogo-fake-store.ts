@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { Partida, ResumoPartida } from '../../models/Partida';
 import { EstadoDicas, PontoMapa, Rodada } from '../../models/Rodada';
 import { ResultadoRodada } from '../../models/ResultadoRodada';
+import { RankingItem } from '../../models/RankingItem';
+import { UsuarioAutenticado } from '../../models/Usuario';
 
 /** Constantes que no back real ficam no servidor. */
 export const NUM_RODADAS = 5;
@@ -27,6 +29,9 @@ interface RodadaFake {
 interface PartidaFake {
   partida: Partida;
   rodadas: RodadaFake[];
+  usuarioId: number;
+  nomeUsuario: string;
+  fotoUsuario: string | null;
 }
 
 /** Erro no mesmo formato da API ({ erro, mensagem }). */
@@ -62,6 +67,7 @@ export class JogoFakeStore {
 
   criarPartida(): Partida {
     const id = this.proximoId++;
+    const usuario = this.usuarioAtual();
     const sorteados = [...LOCAIS].sort(() => Math.random() - 0.5).slice(0, NUM_RODADAS);
     const partida: Partida = {
       id,
@@ -77,7 +83,13 @@ export class JogoFakeStore {
       dicasUsadas: 0,
       resultado: null,
     }));
-    this.partidas.set(id, { partida, rodadas });
+    this.partidas.set(id, {
+      partida,
+      rodadas,
+      usuarioId: usuario?.id ?? 0,
+      nomeUsuario: usuario?.nome ?? 'Visitante',
+      fotoUsuario: usuario?.fotoUrl ?? null,
+    });
     this.salvar();
     return { ...partida };
   }
@@ -167,6 +179,64 @@ export class JogoFakeStore {
           pontos: r.resultado!.pontos,
         })),
     };
+  }
+
+  ranking(): RankingItem[] {
+    const porUsuario = new Map<
+      number,
+      { usuarioId: number; nome: string; fotoUrl: string | null; melhorPontuacao: number; partidas: number }
+    >();
+
+    for (const registro of this.partidas.values()) {
+      if (registro.partida.status !== 'FINALIZADA') {
+        continue;
+      }
+
+      const atual = porUsuario.get(registro.usuarioId);
+      if (!atual) {
+        porUsuario.set(registro.usuarioId, {
+          usuarioId: registro.usuarioId,
+          nome: registro.nomeUsuario,
+          fotoUrl: registro.fotoUsuario,
+          melhorPontuacao: registro.partida.pontuacaoTotal,
+          partidas: 1,
+        });
+      } else {
+        atual.melhorPontuacao = Math.max(atual.melhorPontuacao, registro.partida.pontuacaoTotal);
+        atual.partidas++;
+      }
+    }
+
+    return [...porUsuario.values()]
+      .sort((a, b) => b.melhorPontuacao - a.melhorPontuacao)
+      .map((item, index) => ({ ...item, posicao: index + 1 }));
+  }
+
+  estatisticasUsuario(usuarioId: number): {
+    partidas: number;
+    pontuacaoRecorde: number;
+  } {
+    const partidas = [...this.partidas.values()].filter(
+      (registro) =>
+        registro.usuarioId === usuarioId && registro.partida.status === 'FINALIZADA',
+    );
+
+    return {
+      partidas: partidas.length,
+      pontuacaoRecorde: partidas.reduce(
+        (melhor, registro) => Math.max(melhor, registro.partida.pontuacaoTotal),
+        0,
+      ),
+    };
+  }
+
+  private usuarioAtual(): UsuarioAutenticado | null {
+    try {
+      const bruto = localStorage.getItem('par-guessr-user');
+      return bruto ? (JSON.parse(bruto) as UsuarioAutenticado) : null;
+    } catch {
+      return null;
+    }
   }
 
   /** Guarda o estado no navegador para sobreviver a recarregamentos (só no fake). */

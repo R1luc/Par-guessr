@@ -23,6 +23,10 @@
     </div>
 
     <p><strong>E-mail:</strong> {{ user.email }}</p>
+    @if (jogo.estatisticasUsuario(user.id); as estatisticas) {
+      <p><strong>Partidas jogadas:</strong> {{ estatisticas.partidas }}</p>
+      <p><strong>Pontuação recorde:</strong> {{ estatisticas.pontuacaoRecorde }}</p>
+    }
     <div class="profile-row">
       <strong>Senha:</strong>
       <span>••••••••</span>
