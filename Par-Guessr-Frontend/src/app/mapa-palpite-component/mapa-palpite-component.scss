@@ -1,27 +1,54 @@
-.mapa {
-  position: relative;
+:host {
   display: block;
+  margin-bottom: 1rem;
+}
+
+.caixa {
+  position: relative;
+}
+
+.mapa {
   width: 100%;
-  aspect-ratio: 4 / 3;
-  margin: 0;
-  padding: 0;
-  border: 2px dashed #888;
+  height: clamp(420px, 78vh, 900px);
+  border: 1px solid #d6d1c4;
   border-radius: 8px;
-  background: #f3f3f3;
+  background: #f6f3ec;
   cursor: crosshair;
 }
 
-.legenda {
-  color: #555;
+.mapa.desabilitado {
+  cursor: grab;
 }
 
-.marcador {
+.ampliar {
   position: absolute;
-  width: 16px;
-  height: 16px;
-  transform: translate(-50%, -50%);
-  border: 2px solid #fff;
-  border-radius: 50%;
-  background: #d92d20;
-  pointer-events: none;
+  top: 0.75rem;
+  right: 0.75rem;
+  z-index: 1200;
+  min-height: auto;
+  margin: 0;
+  padding: 0.35rem 0.75rem;
+  border: 1px solid #263449;
+  border-radius: 6px;
+  background: #fff;
+  box-shadow: 0 1px 4px rgb(0 0 0 / 25%);
+}
+
+.caixa.ampliado {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  background: #f6f3ec;
+
+  .mapa {
+    height: 100dvh;
+    border: 0;
+    border-radius: 0;
+  }
+}
+
+.legenda {
+  margin: 0.5rem 0 0;
+  color: #555;
+  font-size: 0.875rem;
 }

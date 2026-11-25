@@ -1,0 +1,21 @@
+// Tela da rodada mais larga que o padrão (480px), para o mapa ter espaço.
+main {
+  max-width: 1200px;
+}
+
+.rodada {
+  display: grid;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+// Tablet/desktop: foto e dicas à esquerda, mapa grande à direita.
+@media (min-width: 900px) {
+  .rodada {
+    grid-template-columns: minmax(280px, 380px) 1fr;
+  }
+}
+
+.resultado {
+  max-width: 480px;
+}

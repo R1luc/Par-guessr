@@ -1,12 +1,23 @@
-<button
-  type="button"
-  class="mapa"
-  (click)="clicar($event)"
-  [disabled]="desabilitado()"
-  aria-label="Planta do campus. Clique para marcar onde você acha que a foto foi tirada."
->
-  <span class="legenda">Planta do campus (provisória)</span>
-  @if (marcador(); as m) {
-    <span class="marcador" [style.left.%]="m.x * 100" [style.top.%]="m.y * 100"></span>
-  }
-</button>
+<div class="caixa" [class.ampliado]="ampliado()" (keydown.escape)="fecharAmpliado()">
+  <div
+    #mapa
+    class="mapa"
+    [class.desabilitado]="desabilitado() || resposta()"
+    role="application"
+    aria-label="Planta do campus. Clique para marcar onde você acha que a foto foi tirada. Com o teclado, use as setas para mover o mapa e Enter para marcar o centro."
+    (keydown.enter)="marcarCentro()"
+  ></div>
+  <button
+    type="button"
+    class="ampliar"
+    [attr.aria-pressed]="ampliado()"
+    (click)="alternarAmpliado()"
+  >
+    {{ ampliado() ? 'Fechar tela cheia' : 'Tela cheia' }}
+  </button>
+</div>
+@if (!desabilitado() && !resposta()) {
+  <p class="legenda">
+    {{ marcador() ? 'Palpite marcado. Toque de novo para mudar.' : 'Arraste e dê zoom para explorar. Toque para marcar.' }}
+  </p>
+}

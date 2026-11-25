@@ -11,25 +11,40 @@
     <h1>Rodada {{ r.numero }} de {{ r.totalRodadas }}</h1>
 
     @if (resultado(); as res) {
-      <app-resultado-rodada-component [resultado]="res" (proxima)="proxima()" />
+      <div class="rodada">
+        <div class="resultado">
+          <app-resultado-rodada-component [resultado]="res" (proxima)="proxima()" />
+        </div>
+        <app-mapa-palpite-component
+          [desabilitado]="true"
+          [palpiteFinal]="{ x: res.palpiteX, y: res.palpiteY }"
+          [resposta]="{ x: res.respostaX, y: res.respostaY }"
+        />
+      </div>
     } @else {
-      <app-imagem-local-component [imagemUrl]="r.imagemUrl" />
+      <div class="rodada">
+        <div>
+          <app-imagem-local-component [imagemUrl]="r.imagemUrl" />
 
-      <app-dicas-component
-        [dicasUsadas]="r.dicasUsadas"
-        [maxDicas]="r.maxDicas"
-        [multiplicadorAtual]="r.multiplicadorAtual"
-        [multiplicadorProximaDica]="r.multiplicadorProximaDica"
-        [desabilitado]="ocupado()"
-        (pedir)="pedirDica()"
-      />
+          <app-dicas-component
+            [dicasUsadas]="r.dicasUsadas"
+            [maxDicas]="r.maxDicas"
+            [multiplicadorAtual]="r.multiplicadorAtual"
+            [multiplicadorProximaDica]="r.multiplicadorProximaDica"
+            [desabilitado]="ocupado()"
+            (pedir)="pedirDica()"
+          />
 
-      <h2>Onde fica?</h2>
-      <app-mapa-palpite-component [desabilitado]="ocupado()" (escolher)="palpite.set($event)" />
+          <button type="button" (click)="enviarPalpite()" [disabled]="!palpite() || ocupado()">
+            Enviar palpite
+          </button>
+        </div>
 
-      <button type="button" (click)="enviarPalpite()" [disabled]="!palpite() || ocupado()">
-        Enviar palpite
-      </button>
+        <div>
+          <h2>Onde fica?</h2>
+          <app-mapa-palpite-component [desabilitado]="ocupado()" (escolher)="palpite.set($event)" />
+        </div>
+      </div>
     }
   } @else {
     <p>Carregando...</p>
