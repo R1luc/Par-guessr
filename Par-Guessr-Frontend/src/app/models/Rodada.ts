@@ -23,4 +23,13 @@ export interface PontoMapa {
   y: number;
 }
 
+export const DIMENSOES_PLANTA = { largura: 2198, altura: 3569 } as const;
+
+/** Distância em frações da altura da planta, preservando sua proporção original. */
+export function distanciaMapa(a: PontoMapa, b: PontoMapa): number {
+  const deltaX = ((a.x - b.x) * DIMENSOES_PLANTA.largura) / DIMENSOES_PLANTA.altura;
+  const deltaY = a.y - b.y;
+  return Math.hypot(deltaX, deltaY);
+}
+
 export type PalpiteRequest = PontoMapa;

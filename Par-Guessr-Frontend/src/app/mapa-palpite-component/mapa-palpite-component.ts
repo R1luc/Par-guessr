@@ -13,13 +13,13 @@ import {
   viewChild,
 } from '@angular/core';
 import * as L from 'leaflet';
-import { PontoMapa } from '../models/Rodada';
+import { DIMENSOES_PLANTA, PontoMapa } from '../models/Rodada';
 
-/** Tamanho em pixels de public/planta-campus.webp. Se trocar a imagem, atualize aqui. */
-const LARGURA = 2198;
-const ALTURA = 3569;
 const PLANTA_URL = 'planta-campus.webp';
-const LIMITES = L.latLngBounds([0, 0], [ALTURA, LARGURA]);
+const LIMITES = L.latLngBounds(
+  [0, 0],
+  [DIMENSOES_PLANTA.altura, DIMENSOES_PLANTA.largura],
+);
 
 /**
  * Mapa da planta do campus com Leaflet (CRS.Simple, sem tiles).
@@ -164,13 +164,16 @@ export class MapaPalpiteComponent {
   }
 
   private paraLatLng(p: PontoMapa): L.LatLng {
-    return L.latLng((1 - p.y) * ALTURA, p.x * LARGURA);
+    return L.latLng(
+      (1 - p.y) * DIMENSOES_PLANTA.altura,
+      p.x * DIMENSOES_PLANTA.largura,
+    );
   }
 
   private paraPonto(ll: L.LatLng): PontoMapa {
     return {
-      x: this.limitar(ll.lng / LARGURA),
-      y: this.limitar(1 - ll.lat / ALTURA),
+      x: this.limitar(ll.lng / DIMENSOES_PLANTA.largura),
+      y: this.limitar(1 - ll.lat / DIMENSOES_PLANTA.altura),
     };
   }
 

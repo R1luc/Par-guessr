@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Partida, ResumoPartida } from '../../models/Partida';
-import { EstadoDicas, PontoMapa, Rodada } from '../../models/Rodada';
+import { distanciaMapa, EstadoDicas, PontoMapa, Rodada } from '../../models/Rodada';
 import { ResultadoRodada } from '../../models/ResultadoRodada';
 import { RankingItem } from '../../models/RankingItem';
 import { UsuarioAutenticado } from '../../models/Usuario';
@@ -8,8 +8,21 @@ import { UsuarioAutenticado } from '../../models/Usuario';
 /** Constantes que no back real ficam no servidor. */
 export const NUM_RODADAS = 5;
 export const MAX_DICAS = 3;
-const DIST_MAX_NORM = 0.25;
+const MARGEM_PONTUACAO_MAXIMA = 0.013;
+const DIST_MAX_NORM = 0.195;
 const PASSO_MULTIPLICADOR = 0.2;
+
+export function calcularProximidade(distancia: number): number {
+  if (distancia <= MARGEM_PONTUACAO_MAXIMA) {
+    return 1;
+  }
+  if (distancia >= DIST_MAX_NORM) {
+    return 0;
+  }
+  const progresso =
+    (distancia - MARGEM_PONTUACAO_MAXIMA) / (DIST_MAX_NORM - MARGEM_PONTUACAO_MAXIMA);
+  return 1 - progresso ** 2;
+}
 
 interface LocalFake {
   id: number;
@@ -128,8 +141,8 @@ export class JogoFakeStore {
     }
     const p = this.obterPartida(Math.floor(rodadaId / 100));
 
-    const distancia = Math.hypot(ponto.x - rodada.local.x, ponto.y - rodada.local.y);
-    const proximidade = Math.max(0, 1 - distancia / DIST_MAX_NORM);
+    const distancia = distanciaMapa(ponto, rodada.local);
+    const proximidade = calcularProximidade(distancia);
     const pontosBase = Math.round(1000 * proximidade);
     const multiplicador = this.multiplicador(rodada.dicasUsadas);
     const pontos = Math.round(pontosBase * multiplicador);
